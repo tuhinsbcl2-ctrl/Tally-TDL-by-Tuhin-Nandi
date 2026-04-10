@@ -1,0 +1,116 @@
+;; ==============================================================
+;; PART 1: ADVANCED MIS DASHBOARD (PRO LEVEL)
+;; ============================================================== 
+
+;; Add to Gateway of Tally
+[#Menu: Gateway of Tally]
+    Add : Item : Before : @@locQuit : "Advanced MIS Dashboard" : Display : Adv MIS Dashboard
+
+;; --------------------------------------------------------------
+;; 1. REPORT & FORM DEFINITION (UI)
+;; --------------------------------------------------------------
+[Report: Adv MIS Dashboard]
+    Form : Adv MIS Dashboard
+    Title : "Advanced MIS Dashboard - Pro Level"
+
+[Form: Adv MIS Dashboard]
+    Part : Adv MIS Header, Adv MIS Body
+    Width : 100% Page
+    Height : 100% Page
+    Background : White
+
+[Part: Adv MIS Header]
+    Line : Adv MIS TitleLine
+    Border : Thin Bottom
+
+[Line: Adv MIS TitleLine]
+    Field : Name Field
+    Local : Field : Name Field : Set as : "ADVANCED PRO MIS DASHBOARD"
+    Local : Field : Name Field : Align  : Center
+    Local : Field : Name Field : Style  : Large Bold
+
+;; --------------------------------------------------------------
+;; 2. BODY PART & LINES (Displaying the Data)
+;; --------------------------------------------------------------
+[Part: Adv MIS Body]
+    Line : Adv MIS SalesPurc, Adv MIS Profits, Adv MIS Balances, Adv MIS Ratios
+    Space Top : 1
+
+;; LINE 1: Sales & Purchase
+[Line: Adv MIS SalesPurc]
+    Field : Medium Prompt, Adv MIS TotalSales, Medium Prompt, Adv MIS TotalPurc
+    Local : Field : Medium Prompt : Set as : "Total Sales: ", "Total Purchase: "
+
+[Field: Adv MIS TotalSales]
+    Use : Amount Field
+    Set as : $$GetTotalSales
+    Format : "NoZero, DrCr"
+
+[Field: Adv MIS TotalPurc]
+    Use : Amount Field
+    Set as : $$GetTotalPurc
+    Format : "NoZero, DrCr"
+
+;; LINE 2: Profits
+[Line: Adv MIS Profits]
+    Field : Medium Prompt, Adv MIS GrossProfit, Medium Prompt, Adv MIS NetProfit
+    Local : Field : Medium Prompt : Set as : "Gross Profit: ", "Net Profit: "
+
+[Field: Adv MIS GrossProfit]
+    Use : Amount Field
+    Set as : $$GetGrossProfit
+
+[Field: Adv MIS NetProfit]
+    Use : Amount Field
+    Set as : $$GetNetProfit
+
+;; LINE 3: Balances
+[Line: Adv MIS Balances]
+    Field : Medium Prompt, Adv MIS Debtors, Medium Prompt, Adv MIS Creditors
+    Local : Field : Medium Prompt : Set as : "Sundry Debtors: ", "Sundry Creditors: "
+
+[Field: Adv MIS Debtors]
+    Use : Amount Field
+    Set as : $$GetGroupBal:"Sundry Debtors"
+
+[Field: Adv MIS Creditors]
+    Use : Amount Field
+    Set as : $$GetGroupBal:"Sundry Creditors"
+
+;; LINE 4: Key Ratios
+[Line: Adv MIS Ratios]
+    Field : Medium Prompt, Adv MIS GPPercent, Medium Prompt, Adv MIS NPPercent
+    Local : Field : Medium Prompt : Set as : "GP %: ", "NP %: "
+
+[Field: Adv MIS GPPercent]
+    Use : Number Field
+    Set as : ($$GetGrossProfit / $$GetTotalSales) * 100
+    Format : "Percentage"
+
+[Field: Adv MIS NPPercent]
+    Use : Number Field
+    Set as : ($$GetNetProfit / $$GetTotalSales) * 100
+    Format : "Percentage"
+
+;; --------------------------------------------------------------
+;; 3. SYSTEM FORMULAS (Calculations)
+;; --------------------------------------------------------------
+[System: Formula]
+    GetGroupBal     : $$GroupClosingBal:##SVCurrentCompany:$1
+    GetTotalSales   : $$GroupClosingBal:##SVCurrentCompany:"Sales Accounts"
+    GetTotalPurc    : $$GroupClosingBal:##SVCurrentCompany:"Purchase Accounts"
+    
+    ;; Placeholders for Profit (usually requires more complex internal collection parsing)
+    GetGrossProfit  : 0  ;; To be computed via Trading A/c Collection
+    GetNetProfit    : 0  ;; To be computed via P&L A/c Collection
+
+;; --------------------------------------------------------------
+;; 4. COLLECTIONS (Data Extraction)
+;; --------------------------------------------------------------
+;; Example: Collection to get Top 10 Customers (Debtors)
+[Collection: Top 10 Debtors]
+    Type    : Ledger
+    ChildOf : "Sundry Debtors"
+    Sort    : @@Default : -$ClosingBalance
+    Fetch   : Name, ClosingBalance
+    Keep    : 10
