@@ -12,6 +12,7 @@
 [Report: Adv MIS Dashboard]
     Form : Adv MIS Dashboard
     Title : "Advanced MIS Dashboard - Pro Level"
+    Object : Company : ##SVCurrentCompany
 
 [Form: Adv MIS Dashboard]
     Part : Adv MIS Header, Adv MIS Body
@@ -51,12 +52,12 @@
 [Field: Adv MIS TotalSales]
     Use : Amount Field
     Set as : $$GetTotalSales
-    Format : "NoZero, DrCr"
+    Format : "DrCr"
 
 [Field: Adv MIS TotalPurc]
     Use : Amount Field
     Set as : $$GetTotalPurc
-    Format : "NoZero, DrCr"
+    Format : "DrCr"
 
 ;; LINE 2: Profits
 [Line: Adv MIS Profits]
@@ -73,10 +74,12 @@
 [Field: Adv MIS GrossProfit]
     Use : Amount Field
     Set as : $$GetGrossProfit
+    Format : "DrCr"
 
 [Field: Adv MIS NetProfit]
     Use : Amount Field
     Set as : $$GetNetProfit
+    Format : "DrCr"
 
 ;; LINE 3: Balances
 [Line: Adv MIS Balances]
@@ -92,11 +95,13 @@
 
 [Field: Adv MIS Debtors]
     Use : Amount Field
-    Set as : $$GetGroupBal:"Sundry Debtors"
+    Set as : $$GetDebtors
+    Format : "DrCr"
 
 [Field: Adv MIS Creditors]
     Use : Amount Field
-    Set as : $$GetGroupBal:"Sundry Creditors"
+    Set as : $$GetCreditors
+    Format : "DrCr"
 
 ;; LINE 4: Key Ratios
 [Line: Adv MIS Ratios]
@@ -124,18 +129,18 @@
 ;; 3. SYSTEM FORMULAS (Calculations)
 ;; --------------------------------------------------------------
 [System: Formula]
-    GetGroupBal     : $$GroupClosingBal:##SVCurrentCompany:$1
-    GetTotalSales   : $$GroupClosingBal:##SVCurrentCompany:"Sales Accounts"
-    GetTotalPurc    : $$GroupClosingBal:##SVCurrentCompany:"Purchase Accounts"
+    GetTotalSales   : $ClosingBalance:Group:"Sales Accounts"
+    GetTotalPurc    : $ClosingBalance:Group:"Purchase Accounts"
+    GetDebtors      : $ClosingBalance:Group:"Sundry Debtors"
+    GetCreditors    : $ClosingBalance:Group:"Sundry Creditors"
     
-    ;; Placeholders for Profit (usually requires more complex internal collection parsing)
-    GetGrossProfit  : 0  ;; To be computed via Trading A/c Collection
-    GetNetProfit    : 0  ;; To be computed via P&L A/c Collection
+    ;; Temporary placeholder calculations for Profit
+    GetGrossProfit  : ($$GetTotalSales * -1) - $$GetTotalPurc
+    GetNetProfit    : 0
 
 ;; --------------------------------------------------------------
 ;; 4. COLLECTIONS (Data Extraction)
 ;; --------------------------------------------------------------
-;; Example: Collection to get Top 10 Customers (Debtors)
 [Collection: Top 10 Debtors]
     Type    : Ledger
     ChildOf : "Sundry Debtors"
