@@ -38,8 +38,15 @@
 
 ;; LINE 1: Sales & Purchase
 [Line: Adv MIS SalesPurc]
-    Field : Medium Prompt, Adv MIS TotalSales, Medium Prompt, Adv MIS TotalPurc
-    Local : Field : Medium Prompt : Set as : "Total Sales: ", "Total Purchase: "
+    Field : Adv MIS Sales Prompt, Adv MIS TotalSales, Adv MIS Purc Prompt, Adv MIS TotalPurc
+
+[Field: Adv MIS Sales Prompt]
+    Use : Medium Prompt
+    Set as : "Total Sales: "
+
+[Field: Adv MIS Purc Prompt]
+    Use : Medium Prompt
+    Set as : "Total Purchase: "
 
 [Field: Adv MIS TotalSales]
     Use : Amount Field
@@ -53,8 +60,15 @@
 
 ;; LINE 2: Profits
 [Line: Adv MIS Profits]
-    Field : Medium Prompt, Adv MIS GrossProfit, Medium Prompt, Adv MIS NetProfit
-    Local : Field : Medium Prompt : Set as : "Gross Profit: ", "Net Profit: "
+    Field : Adv MIS GP Prompt, Adv MIS GrossProfit, Adv MIS NP Prompt, Adv MIS NetProfit
+
+[Field: Adv MIS GP Prompt]
+    Use : Medium Prompt
+    Set as : "Gross Profit: "
+
+[Field: Adv MIS NP Prompt]
+    Use : Medium Prompt
+    Set as : "Net Profit: "
 
 [Field: Adv MIS GrossProfit]
     Use : Amount Field
@@ -66,8 +80,15 @@
 
 ;; LINE 3: Balances
 [Line: Adv MIS Balances]
-    Field : Medium Prompt, Adv MIS Debtors, Medium Prompt, Adv MIS Creditors
-    Local : Field : Medium Prompt : Set as : "Sundry Debtors: ", "Sundry Creditors: "
+    Field : Adv MIS Debtors Prompt, Adv MIS Debtors, Adv MIS Creditors Prompt, Adv MIS Creditors
+
+[Field: Adv MIS Debtors Prompt]
+    Use : Medium Prompt
+    Set as : "Sundry Debtors: "
+
+[Field: Adv MIS Creditors Prompt]
+    Use : Medium Prompt
+    Set as : "Sundry Creditors: "
 
 [Field: Adv MIS Debtors]
     Use : Amount Field
@@ -79,8 +100,15 @@
 
 ;; LINE 4: Key Ratios
 [Line: Adv MIS Ratios]
-    Field : Medium Prompt, Adv MIS GPPercent, Medium Prompt, Adv MIS NPPercent
-    Local : Field : Medium Prompt : Set as : "GP %: ", "NP %: "
+    Field : Adv MIS GP Pct Prompt, Adv MIS GPPercent, Adv MIS NP Pct Prompt, Adv MIS NPPercent
+
+[Field: Adv MIS GP Pct Prompt]
+    Use : Medium Prompt
+    Set as : "GP %: "
+
+[Field: Adv MIS NP Pct Prompt]
+    Use : Medium Prompt
+    Set as : "NP %: "
 
 [Field: Adv MIS GPPercent]
     Use : Number Field
